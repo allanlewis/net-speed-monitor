@@ -1,0 +1,39 @@
+{
+    "type": "result",
+    "timestamp": "2020-05-23T11:55:21Z",
+    "ping": {
+        "jitter": 0.24299999999999999,
+        "latency": 9.9130000000000003
+    },
+    "download": {
+        "bandwidth": 8719611,
+        "bytes": 35931592,
+        "elapsed": 4104
+    },
+    "upload": {
+        "bandwidth": 2303922,
+        "bytes": 8300080,
+        "elapsed": 3604
+    },
+    "isp": "Plusnet",
+    "interface": {
+        "internalIp": "192.168.225.209",
+        "name": "eth0",
+        "macAddr": "00:15:5D:7A:CA:06",
+        "isVpn": false,
+        "externalIp": "31.125.54.177"
+    },
+    "server": {
+        "id": 6032,
+        "name": "fdcservers.net",
+        "location": "London",
+        "country": "Great Britain",
+        "host": "lg.lon-c.fdcservers.net",
+        "port": 8080,
+        "ip": "50.7.152.4"
+    },
+    "result": {
+        "id": "87c2e084-b226-4538-8c8e-384cfc20d03c",
+        "url": "https://www.speedtest.net/result/c/87c2e084-b226-4538-8c8e-384cfc20d03c"
+    }
+}
