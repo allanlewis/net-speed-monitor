@@ -20,4 +20,11 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    install_requires=[
+        'bitmath == 1.3.*',
+        'click == 7.*',
+        'humanize == 2.*',
+        'python-dateutil == 2.*',
+        'tabulate == 0.8.*',
+    ]
 )
