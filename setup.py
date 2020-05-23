@@ -6,7 +6,8 @@ with open("README.md") as readme_file:
 
 setuptools.setup(
     name="net-speed-monitor",
-    version="0.1.5",
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     author="Allan Lewis",
     author_email="allanlewis99@gmail.com",
     description="A tool for monitoring Internet connection speed",
