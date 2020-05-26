@@ -90,7 +90,7 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
             ('Upload speed', result.upload.bandwidth.format("{value:.2f} {unit}ps")),
             ('Latency', f'{result.ping.latency:.1f} ms'),
             ('Jitter', f'{result.ping.jitter:.1f} ms'),
-        ])
+        ], log_level=logging.INFO)
 
         if expected_bandwidth is None:
             sleep_duration = max(sleep_duration for _, sleep_duration, _ in thresholds)
