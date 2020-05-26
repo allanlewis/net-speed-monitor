@@ -3,6 +3,7 @@
 
 import json
 import logging
+import shlex
 import shutil
 import subprocess
 import time
@@ -19,6 +20,17 @@ from tabulate import tabulate
 logger = logging.getLogger('net-speed-monitor')
 
 
+class Threshold(click.ParamType):
+    """A parameter type for speed result threshold definitions."""
+
+    envvar_list_splitter = ' / '
+
+    def convert(self, value, param, ctx):
+        """Split the definitions into its component parts and coerce types."""
+        fraction, sleep_duration, description = shlex.split(value)
+        return float(fraction), timedelta(minutes=float(sleep_duration)), str(description)
+
+
 @click.command(context_settings={'auto_envvar_prefix': 'SPEEDTEST'})
 @click.option(
     '--speedtest-cmd', default='speedtest', show_default=True, metavar='COMMAND',
@@ -31,12 +43,13 @@ logger = logging.getLogger('net-speed-monitor')
     '-e', '--expected-bandwidth', type=lambda value: bitmath.Mb(float(value)), metavar='MBPS',
     help='The expected bandwidth in Mbps.')
 @click.option(
-    '-t', '--threshold', 'thresholds', type=(float, lambda mins: timedelta(minutes=mins), str),
+    '-t', '--threshold', 'thresholds', type=Threshold(),
     default=(
         (0.6, 5, 'slow'),
         (0.3, 1, 'very slow'),
     ), show_default=True, metavar='FRACTION sleep_duration DESC', multiple=True,
-    help='Add a threshold to control the retry logic.')
+    help='Add a threshold to control the retry logic. If using the env var `SPEEDTEST_THRESHOLDS`, '
+         'separate definitions with " / " and quote descriptions that contain whitespace.')
 @click.option(
     '--default-sleep', type=lambda mins: timedelta(minutes=float(mins)), default=60,
     show_default=True, metavar='MINS',
