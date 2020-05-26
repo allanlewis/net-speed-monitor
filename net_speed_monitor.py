@@ -27,7 +27,10 @@ class Threshold(click.ParamType):
 
     def convert(self, value, param, ctx):
         """Split the definitions into its component parts and coerce types."""
-        fraction, sleep_duration, description = shlex.split(value)
+        if isinstance(value, str):  # Value provided from env var
+            value = tuple(shlex.split(value))
+
+        fraction, sleep_duration, description = value
         return float(fraction), timedelta(minutes=float(sleep_duration)), str(description)
 
 
