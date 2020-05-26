@@ -38,7 +38,8 @@ logger = logging.getLogger('net-speed-monitor')
     ), show_default=True, metavar='FRACTION sleep_duration DESC', multiple=True,
     help='Add a threshold to control the retry logic.')
 @click.option(
-    '--default-sleep', type=lambda mins: timedelta(minutes=mins), metavar='MINS',
+    '--default-sleep', type=lambda mins: timedelta(minutes=float(mins)), default=60,
+    show_default=True, metavar='MINS',
     help='The number of minutes to sleep if none of the thresholds are hit.')
 @click.pass_context
 def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, thresholds, default_sleep):
