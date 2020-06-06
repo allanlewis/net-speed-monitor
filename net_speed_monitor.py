@@ -80,9 +80,15 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
             cmd = [speedtest_cmd, '--format=json']
             logger.info('Running speed test...')
             logger.debug(f'Executing {" ".join(cmd)!r}')
-            output = subprocess.run(cmd, check=True, stdout=subprocess.PIPE, text=True).stdout
-            logger.debug(f'Output of speedtest command:\n{output}')
-            result = json.loads(output, object_hook=parse_to_namedtuple)
+            result = subprocess.run(
+                cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            if result.returncode != 0:
+                logger.error(
+                    f'Speedtest failed!\nOutput:\n{result.stdout}\nError:\n{result.stderr}')
+                continue
+
+            logger.debug(f'Output of speedtest command:\n{result.stdout}')
+            result = json.loads(result.stdout, object_hook=parse_to_namedtuple)
 
         logger.debug(f'Raw result:\n{result}')
         log_table('Test results:', [
