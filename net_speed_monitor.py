@@ -61,7 +61,7 @@ class Threshold(click.ParamType):
 def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, thresholds, default_sleep):
     """Monitor Internet connection speed."""
     logging.basicConfig(
-        format='%(asctime)s [%(levelname)8s] %(name)s: %(message)s',
+        format='[%(levelname)8s] %(name)s: %(message)s',
         level=logging.DEBUG if verbose else logging.INFO)
 
     log_table('Params:', sorted(ctx.params.items()))
