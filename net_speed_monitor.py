@@ -15,6 +15,7 @@ import bitmath
 import click
 from dateutil.parser import parse as parse_dt
 from humanize import naturaldelta
+from systemd.journal import JournalHandler
 from tabulate import tabulate
 
 logger = logging.getLogger('net-speed-monitor')
@@ -57,9 +58,15 @@ class Threshold(click.ParamType):
     '--default-sleep', type=lambda mins: timedelta(minutes=float(mins)), default=60,
     show_default=True, metavar='MINS',
     help='The number of minutes to sleep if none of the thresholds are hit.')
+@click.option('--log-to-journal', is_flag=True, help='If set, log to the journal instead of stderr')
 @click.pass_context
-def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, thresholds, default_sleep):
+def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, thresholds, default_sleep,
+         log_to_journal):
     """Monitor Internet connection speed."""
+    if log_to_journal:
+        logger.propagate = False
+        logger.addHandler(JournalHandler())
+
     logging.basicConfig(
         format='[%(levelname)8s] %(name)s: %(message)s',
         level=logging.DEBUG if verbose else logging.INFO)

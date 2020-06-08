@@ -27,6 +27,7 @@ setuptools.setup(
         'click == 7.*',
         'humanize == 2.*',
         'python-dateutil == 2.*',
+        'systemd-python',
         'tabulate == 0.8.*',
     ],
     entry_points={
