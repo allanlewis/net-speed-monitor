@@ -107,7 +107,7 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
         ], log_level=logging.INFO)
 
         if expected_bandwidth is None:
-            sleep_duration = max(sleep_duration for _, sleep_duration, _ in thresholds)
+            sleep_duration = default_sleep
             logger.info('Expected bandwidth unknown')
         else:
             thresholds = sorted(thresholds)
