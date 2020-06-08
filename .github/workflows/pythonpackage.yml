@@ -21,6 +21,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        set -euxo pipefail
+        sudo apt update
+        sudo apt install --no-install-recommends libsystemd-dev
+        set +x
+        sudo rm -rf /var/lib/apt/lists/*
     - name: Install tox
       run: pip install tox==3.*
     - name: Run tox
