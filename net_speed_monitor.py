@@ -71,6 +71,7 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
             f'Command {speedtest_cmd!r} not found! Is Speedtest CLI installed? '
             'See https://www.speedtest.net/apps/cli')
 
+    result = None
     if result_file is not None:
         logger.info(f'Loading result from {result_file.name!r}')
         result = json.load(result_file, object_hook=parse_to_namedtuple)
