@@ -88,11 +88,16 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
             cmd = [speedtest_cmd, '--format=json']
             logger.info('Running speed test...')
             logger.debug(f'Executing {" ".join(cmd)!r}')
-            result = subprocess.run(
-                cmd, check=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-            if result.returncode != 0:
+            try:
+                result = subprocess.run(
+                    cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                    timeout=60)
+            except subprocess.CalledProcessError as exc:
                 logger.error(
-                    f'Speedtest failed!\nOutput:\n{result.stdout}\nError:\n{result.stderr}')
+                    f'Speedtest failed!\nOutput:\n{exc.stdout}\nError:\n{exc.stderr}')
+                continue
+            except subprocess.TimeoutExpired as exc:
+                logger.error(f'Speedtest timed out! ({exc})')
                 continue
 
             logger.debug(f'Output of speedtest command:\n{result.stdout}')
