@@ -101,7 +101,12 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
                 continue
 
             logger.debug(f'Output of speedtest command:\n{result.stdout}')
-            result = json.loads(result.stdout, object_hook=parse_to_namedtuple)
+            try:
+                result = json.loads(result.stdout, object_hook=parse_to_namedtuple)
+            except json.JSONDecodeError as exc:
+                logger.error(f'Speedtest returned invalid JSON: {exc}\n{exc.doc}')
+                sleep_delta(timedelta(minutes=1))
+                continue
 
         logger.debug(f'Raw result:\n{result}')
         log_table('Test results:', [
