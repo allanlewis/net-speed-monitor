@@ -120,7 +120,7 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
                         result = obj
 
             if result is None:
-                logger.error(f'Speedtest failed to return a result!')
+                logger.error('Speedtest failed to return a result!')
                 sleep_delta(timedelta(minutes=1))
                 continue
 
