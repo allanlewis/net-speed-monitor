@@ -89,7 +89,7 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
             logger.info('Running speed test...')
             logger.debug(f'Executing {" ".join(cmd)!r}')
             try:
-                result = subprocess.run(
+                proc = subprocess.run(
                     cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                     timeout=60)
             except subprocess.CalledProcessError as exc:
@@ -100,11 +100,27 @@ def main(ctx, speedtest_cmd, verbose, result_file, expected_bandwidth, threshold
                 logger.error(f'Speedtest timed out! ({exc})')
                 continue
 
-            logger.debug(f'Output of speedtest command:\n{result.stdout}')
-            try:
-                result = json.loads(result.stdout, object_hook=parse_to_namedtuple)
-            except json.JSONDecodeError as exc:
-                logger.error(f'Speedtest returned invalid JSON: {exc}\n{exc.doc}')
+            logger.debug(f'Output of speedtest command:\n{proc.stdout}')
+            result = None
+            for line in proc.stdout.splitlines():
+                try:
+                    obj = json.loads(line, object_hook=parse_to_namedtuple)
+                except json.JSONDecodeError as exc:
+                    logger.error(f'Speedtest returned invalid JSON: {exc}\n{exc.doc}')
+                    continue
+
+                logger.debug(f'Parsed JSON object from output:\n{obj}')
+                if obj.type == 'log':
+                    logger.warning(
+                        f'Speedtest returned log message with level {obj.level!r}: {obj.message}')
+                elif obj.type == 'result':
+                    if result is not None:
+                        logger.error('Speedtest returned multiple results!\n{result}\n{obj}')
+                    else:
+                        result = obj
+
+            if result is None:
+                logger.error(f'Speedtest failed to return a result!')
                 sleep_delta(timedelta(minutes=1))
                 continue
 
